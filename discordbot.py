@@ -22,11 +22,10 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-
-
+test
     if message.content.startswith('~rank'):
         rankJSON = watcher.league.by_summoner(region, me['id'])
-        response = json.dumps(rankJSON)
-        await message.channel.send(response['tier'] + ' ' + response['rank'])
+        response = json.loads(rankJSON[1])
+        await message.channel.send(response)
 
 client.run(DTOKEN)

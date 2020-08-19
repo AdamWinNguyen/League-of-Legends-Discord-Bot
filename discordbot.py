@@ -4,28 +4,23 @@ from dotenv import load_dotenv
 from riotwatcher import LolWatcher, ApiError
 #import pandas as pd
 import json
+from discord.ext import commands
 
 load_dotenv()
 DTOKEN = os.getenv('DISCORD_TOKEN')
-client = discord.Client()
 
 RTOKEN = os.getenv('RIOT_TOKEN')
 watcher = LolWatcher(RTOKEN)
-region = 'na1'
-me = watcher.summoner.by_name(region, 'EvilSteel')
+REGION = os.getenv('REGION')
 
-@client.event
-async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+bot = commands.Bot(command_prefix='~')
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-test
-    if message.content.startswith('~rank'):
-        rankJSON = watcher.league.by_summoner(region, me['id'])
-        response = json.loads(rankJSON[1])
-        await message.channel.send(response)
 
-client.run(DTOKEN)
+@bot.command(name='rank')
+async def rank(ctx, username: str):
+    me = watcher.summoner.by_name(REGION, username)
+    rankJSON = watcher.league.by_summoner(REGION, me['id'])
+    response = rankJSON[1]
+    await ctx.send(response['tier'] + ' ' + response['rank'] + ' ' + str(response['leaguePoints']) + ' LP')
+
+bot.run(DTOKEN)

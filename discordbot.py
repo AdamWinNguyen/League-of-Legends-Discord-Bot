@@ -20,7 +20,17 @@ bot = commands.Bot(command_prefix='~')
 async def rank(ctx, username: str):
     me = watcher.summoner.by_name(REGION, username)
     rankJSON = watcher.league.by_summoner(REGION, me['id'])
-    response = rankJSON[1]
-    await ctx.send(response['tier'] + ' ' + response['rank'] + ' ' + str(response['leaguePoints']) + ' LP')
+    ranked = False
+    i = 0
+    while i < len(rankJSON):
+        response = rankJSON[i]
+        if response['queueType'] == 'RANKED_SOLO_5x5':
+            ranked = True
+            break
+        i += 1
+    if ranked:
+        await ctx.send(response['tier'] + ' ' + response['rank'] + ' ' + str(response['leaguePoints']) + ' LP')
+    else:
+        await ctx.send('This user is unranked.')
 
 bot.run(DTOKEN)

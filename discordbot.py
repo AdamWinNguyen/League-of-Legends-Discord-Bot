@@ -33,4 +33,14 @@ async def rank(ctx, username: str):
     else:
         await ctx.send('This user is unranked.')
 
+@bot.command(name='create')
+async def create(ctx):
+    servername = ctx.message.guild.name
+    try:
+        os.makedirs('ServerLeaderboards')
+    except FileExistsError:
+        pass
+    serverleaderboard = open('ServerLeaderboards\\' + servername + '.txt', 'w+')
+
+
 bot.run(DTOKEN)

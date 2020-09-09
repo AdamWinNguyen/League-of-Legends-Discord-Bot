@@ -40,7 +40,8 @@ async def create(ctx):
         os.makedirs('ServerLeaderboards')
     except FileExistsError:
         pass
-    serverleaderboard = open('ServerLeaderboards\\' + servername + '.txt', 'w+')
+    open('ServerLeaderboards\\' + servername + '.txt', 'w+')
+    await ctx.send('Leaderboard generated')
 
 
 bot.run(DTOKEN)
